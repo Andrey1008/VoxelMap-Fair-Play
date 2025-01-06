@@ -338,11 +338,6 @@ public class Map implements Runnable, IChangeObserver {
             }
         }
 
-        if (VoxelConstants.getMinecraft().screen == null && this.options.keyBindMobToggle.consumeClick()) {
-            VoxelConstants.getVoxelMapInstance().getRadarOptions().setOptionValue(EnumOptionsMinimap.SHOWRADAR);
-            this.options.saveAll();
-        }
-
         if (VoxelConstants.getMinecraft().screen == null && this.options.keyBindWaypointToggle.consumeClick()) {
             this.options.toggleIngameWaypoints();
         }

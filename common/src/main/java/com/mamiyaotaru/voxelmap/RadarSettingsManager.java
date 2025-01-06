@@ -130,14 +130,9 @@ public class RadarSettingsManager implements ISubSettingsManager {
 
     public boolean getOptionBooleanValue(EnumOptionsMinimap par1EnumOptions) {
         return switch (par1EnumOptions) {
-            case SHOWRADAR -> this.showRadar;
             case SHOWHOSTILES -> this.showHostiles;
             case SHOWPLAYERS -> this.showPlayers;
-            case SHOWNEUTRALS -> this.showNeutrals;
-            case SHOWPLAYERHELMETS -> this.showHelmetsPlayers;
-            case SHOWMOBHELMETS -> this.showHelmetsMobs;
             case SHOWPLAYERNAMES -> this.showPlayerNames;
-            case SHOWMOBNAMES -> this.showMobNames;
             case RADAROUTLINES -> this.outlines;
             case RADARFILTERING -> this.filtering;
             case SHOWFACING -> this.showFacing;
@@ -146,13 +141,6 @@ public class RadarSettingsManager implements ISubSettingsManager {
     }
 
     public String getOptionListValue(EnumOptionsMinimap par1EnumOptions) {
-        if (Objects.requireNonNull(par1EnumOptions) == EnumOptionsMinimap.RADARMODE) {
-            if (this.radarMode == 2) {
-                return I18n.get("options.minimap.radar.radarmode.full");
-            }
-
-            return I18n.get("options.minimap.radar.radarmode.simple");
-        }
         throw new IllegalArgumentException("Add code to handle EnumOptionMinimap: " + par1EnumOptions.getName() + ". (possibly not a list value applicable to minimap)");
     }
 
@@ -162,24 +150,12 @@ public class RadarSettingsManager implements ISubSettingsManager {
 
     public void setOptionValue(EnumOptionsMinimap par1EnumOptions) {
         switch (par1EnumOptions) {
-            case SHOWRADAR -> this.showRadar = !this.showRadar;
             case SHOWHOSTILES -> this.showHostiles = !this.showHostiles;
             case SHOWPLAYERS -> this.showPlayers = !this.showPlayers;
-            case SHOWNEUTRALS -> this.showNeutrals = !this.showNeutrals;
-            case SHOWPLAYERHELMETS -> this.showHelmetsPlayers = !this.showHelmetsPlayers;
-            case SHOWMOBHELMETS -> this.showHelmetsMobs = !this.showHelmetsMobs;
             case SHOWPLAYERNAMES -> this.showPlayerNames = !this.showPlayerNames;
-            case SHOWMOBNAMES -> this.showMobNames = !this.showMobNames;
             case RADAROUTLINES -> this.outlines = !this.outlines;
             case RADARFILTERING -> this.filtering = !this.filtering;
             case SHOWFACING -> this.showFacing = !this.showFacing;
-            case RADARMODE -> {
-                if (this.radarMode == 2) {
-                    this.radarMode = 1;
-                } else {
-                    this.radarMode = 2;
-                }
-            }
             default ->
                     throw new IllegalArgumentException("Add code to handle EnumOptionMinimap: " + par1EnumOptions.getName());
         }

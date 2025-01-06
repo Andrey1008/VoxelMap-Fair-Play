@@ -70,7 +70,6 @@ public class MapSettingsManager implements ISettingsManager {
     public final KeyMapping keyBindMenu = new KeyMapping("key.minimap.voxelmapmenu", InputConstants.getKey("key.keyboard.m").getValue(), "controls.minimap.title");
     public final KeyMapping keyBindWaypointMenu = new KeyMapping("key.minimap.waypointmenu", -1, "controls.minimap.title");
     public final KeyMapping keyBindWaypoint = new KeyMapping("key.minimap.waypointhotkey", InputConstants.getKey("key.keyboard.n").getValue(), "controls.minimap.title");
-    public final KeyMapping keyBindMobToggle = new KeyMapping("key.minimap.togglemobs", -1, "controls.minimap.title");
     public final KeyMapping keyBindWaypointToggle = new KeyMapping("key.minimap.toggleingamewaypoints", -1, "controls.minimap.title");
     public final KeyMapping[] keyBindings;
     private boolean somethingChanged;
@@ -82,7 +81,7 @@ public class MapSettingsManager implements ISettingsManager {
 
     public MapSettingsManager() {
         instance = this;
-        this.keyBindings = new KeyMapping[]{this.keyBindMenu, this.keyBindWaypointMenu, this.keyBindZoom, this.keyBindFullscreen, this.keyBindWaypoint, this.keyBindMobToggle, this.keyBindWaypointToggle};
+        this.keyBindings = new KeyMapping[]{this.keyBindMenu, this.keyBindWaypointMenu, this.keyBindZoom, this.keyBindFullscreen, this.keyBindWaypoint, this.keyBindWaypointToggle};
     }
 
     public void addSecondaryOptionsManager(ISubSettingsManager secondarySettingsManager) {
@@ -131,7 +130,6 @@ public class MapSettingsManager implements ISettingsManager {
                         case "Menu Key" -> this.bindKey(this.keyBindMenu, curLine[1]);
                         case "Waypoint Menu Key" -> this.bindKey(this.keyBindWaypointMenu, curLine[1]);
                         case "Waypoint Key" -> this.bindKey(this.keyBindWaypoint, curLine[1]);
-                        case "Mob Key" -> this.bindKey(this.keyBindMobToggle, curLine[1]);
                         case "In-game Waypoint Key" -> this.bindKey(this.keyBindWaypointToggle, curLine[1]);
                         case "Teleport Command" -> this.teleportCommand = curLine[1];
                         case "Move Map Down While Status Effect" -> this.moveMapDownWhileStatusEffect = Boolean.parseBoolean(curLine[1]);
@@ -203,7 +201,6 @@ public class MapSettingsManager implements ISettingsManager {
             out.println("Menu Key:" + this.keyBindMenu.saveString());
             out.println("Waypoint Menu Key:" + this.keyBindWaypointMenu.saveString());
             out.println("Waypoint Key:" + this.keyBindWaypoint.saveString());
-            out.println("Mob Key:" + this.keyBindMobToggle.saveString());
             out.println("In-game Waypoint Key:" + this.keyBindWaypointToggle.saveString());
             out.println("Teleport Command:" + this.teleportCommand);
             out.println("Move Map Down While Status Effect:" + this.moveMapDownWhileStatusEffect);
@@ -255,7 +252,6 @@ public class MapSettingsManager implements ISettingsManager {
         return switch (par1EnumOptions) {
             case COORDS -> this.coords;
             case HIDE -> this.hide || !this.minimapAllowed;
-            case CAVEMODE -> this.cavesAllowed && this.showCaves;
             case LIGHTING -> this.lightmap;
             case SQUARE -> this.squareMap;
             case ROTATES -> this.rotates;
@@ -266,7 +262,6 @@ public class MapSettingsManager implements ISettingsManager {
             case BLOCKTRANSPARENCY -> this.blockTransparency;
             case BIOMES -> this.biomes;
             case CHUNKGRID -> this.chunkGrid;
-            case SLIMECHUNKS -> this.slimeChunks;
             case WORLDBORDER -> this.worldborder;
             case MOVEMAPDOWNWHILESTATSUEFFECT -> this.moveMapDownWhileStatusEffect;
             case MOVESCOREBOARDDOWN -> this.moveScoreBoardDown;
@@ -343,19 +338,6 @@ public class MapSettingsManager implements ISettingsManager {
                     return "error";
                 }
             }
-            case DEATHPOINTS -> {
-                if (this.deathpoints == 0) {
-                    return I18n.get("options.off");
-                } else if (this.deathpoints == 1) {
-                    return I18n.get("options.minimap.waypoints.deathpoints.mostrecent");
-                } else {
-                    if (this.deathpoints == 2) {
-                        return I18n.get("options.minimap.waypoints.deathpoints.all");
-                    }
-
-                    return "error";
-                }
-            }
             default ->
                     throw new IllegalArgumentException("Add code to handle EnumOptionMinimap: " + par1EnumOptions.getName() + ". (possibly not a list value applicable to minimap)");
         }
@@ -379,7 +361,6 @@ public class MapSettingsManager implements ISettingsManager {
         switch (par1EnumOptions) {
             case COORDS -> this.coords = !this.coords;
             case HIDE -> this.hide = !this.hide;
-            case CAVEMODE -> this.showCaves = !this.showCaves;
             case LIGHTING -> this.lightmap = !this.lightmap;
             case SQUARE -> this.squareMap = !this.squareMap;
             case ROTATES -> this.rotates = !this.rotates;
@@ -390,7 +371,6 @@ public class MapSettingsManager implements ISettingsManager {
             case BLOCKTRANSPARENCY -> this.blockTransparency = !this.blockTransparency;
             case BIOMES -> this.biomes = !this.biomes;
             case CHUNKGRID -> this.chunkGrid = !this.chunkGrid;
-            case SLIMECHUNKS -> this.slimeChunks = !this.slimeChunks;
             case WORLDBORDER -> this.worldborder = !this.worldborder;
             case MOVEMAPDOWNWHILESTATSUEFFECT -> this.moveMapDownWhileStatusEffect = !this.moveMapDownWhileStatusEffect;
             case MOVESCOREBOARDDOWN -> this.moveScoreBoardDown = !this.moveScoreBoardDown;
@@ -426,12 +406,6 @@ public class MapSettingsManager implements ISettingsManager {
                 ++this.biomeOverlay;
                 if (this.biomeOverlay > 2) {
                     this.biomeOverlay = 0;
-                }
-            }
-            case DEATHPOINTS -> {
-                ++this.deathpoints;
-                if (this.deathpoints > 2) {
-                    this.deathpoints = 0;
                 }
             }
             default ->

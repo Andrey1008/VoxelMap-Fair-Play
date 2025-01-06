@@ -12,9 +12,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class GuiRadarOptions extends GuiScreenMinimap {
-    private static final EnumOptionsMinimap[] FULL_RELEVANT_OPTIONS = { EnumOptionsMinimap.SHOWRADAR, EnumOptionsMinimap.RADARMODE, EnumOptionsMinimap.SHOWHOSTILES, EnumOptionsMinimap.SHOWNEUTRALS, EnumOptionsMinimap.SHOWPLAYERS, EnumOptionsMinimap.SHOWPLAYERNAMES, EnumOptionsMinimap.SHOWMOBNAMES, EnumOptionsMinimap.SHOWPLAYERHELMETS, EnumOptionsMinimap.SHOWMOBHELMETS, EnumOptionsMinimap.RADARFILTERING, EnumOptionsMinimap.RADAROUTLINES };
-    private static final EnumOptionsMinimap[] SIMPLE_RELEVANT_OPTIONS = { EnumOptionsMinimap.SHOWRADAR, EnumOptionsMinimap.RADARMODE, EnumOptionsMinimap.SHOWHOSTILES, EnumOptionsMinimap.SHOWNEUTRALS, EnumOptionsMinimap.SHOWPLAYERS, EnumOptionsMinimap.SHOWFACING };
-
     private final Screen parent;
     private final RadarSettingsManager options;
     protected Component screenTitle;
@@ -28,17 +25,7 @@ public class GuiRadarOptions extends GuiScreenMinimap {
         clearWidgets();
         getButtonList().clear();
         children().clear();
-
         this.screenTitle = Component.translatable("options.minimap.radar.title");
-
-        EnumOptionsMinimap[] relevantOptions = options.radarMode == 2 ? FULL_RELEVANT_OPTIONS : SIMPLE_RELEVANT_OPTIONS;
-
-        for (int i = 0; i < relevantOptions.length; i++) {
-            EnumOptionsMinimap option = relevantOptions[i];
-            GuiOptionButtonMinimap optionButton = new GuiOptionButtonMinimap(this.getWidth() / 2 - 155 + i % 2 * 160, this.getHeight() / 6 + 24 * (i >> 1), option, Component.literal(options.getKeyText(option)), this::optionClicked);
-
-            addRenderableWidget(optionButton);
-        }
 
         iterateButtonOptions();
 
@@ -52,11 +39,6 @@ public class GuiRadarOptions extends GuiScreenMinimap {
 
         EnumOptionsMinimap option = guiOptionButtonMinimap.returnEnumOptions();
         options.setOptionValue(option);
-
-        if (guiOptionButtonMinimap.returnEnumOptions() == EnumOptionsMinimap.RADARMODE) {
-            init();
-            return;
-        }
 
         buttonClicked.setMessage(Component.literal(options.getKeyText(option)));
 
@@ -74,24 +56,11 @@ public class GuiRadarOptions extends GuiScreenMinimap {
     private void iterateButtonOptions() {
         for (GuiEventListener element : getButtonList()) {
             if (!(element instanceof GuiOptionButtonMinimap button)) continue;
-            if (button.returnEnumOptions() != EnumOptionsMinimap.SHOWRADAR) button.active = options.showRadar;
 
             if (button.returnEnumOptions() == EnumOptionsMinimap.SHOWPLAYERS) {
                 button.active = button.active && (options.radarAllowed || options.radarPlayersAllowed);
                 continue;
             }
-
-            if (!(button.returnEnumOptions() != EnumOptionsMinimap.SHOWNEUTRALS && button.returnEnumOptions() != EnumOptionsMinimap.SHOWHOSTILES)) {
-                button.active = button.active && (options.radarAllowed || options.radarMobsAllowed);
-                continue;
-            }
-
-            if (!(button.returnEnumOptions() != EnumOptionsMinimap.SHOWPLAYERHELMETS && button.returnEnumOptions() != EnumOptionsMinimap.SHOWPLAYERNAMES)) {
-                button.active = button.active && options.showPlayers && (options.radarAllowed || options.radarPlayersAllowed);
-                continue;
-            }
-
-            if (button.returnEnumOptions() == EnumOptionsMinimap.SHOWMOBHELMETS && button.returnEnumOptions() != EnumOptionsMinimap.SHOWMOBNAMES) button.active = button.active && (options.showNeutrals || options.showHostiles) && (options.radarAllowed || options.radarMobsAllowed);
         }
     }
 }

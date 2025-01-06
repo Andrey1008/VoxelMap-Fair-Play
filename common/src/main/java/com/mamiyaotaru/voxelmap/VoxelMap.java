@@ -62,26 +62,14 @@ public class VoxelMap implements PreparableReloadListener {
         this.persistentMap = new PersistentMap();
         mapOptions.loadAll();
 
-        try {
-            if (isFair) {
-                radarOptions.radarAllowed = false;
-                radarOptions.radarMobsAllowed = false;
-                radarOptions.radarPlayersAllowed = false;
-            } else {
-                radarOptions.radarAllowed = true;
-                radarOptions.radarMobsAllowed = true;
-                radarOptions.radarPlayersAllowed = true;
-                this.radar = new Radar();
-                this.radarSimple = new RadarSimple();
-            }
-        } catch (RuntimeException var4) {
-            VoxelConstants.getLogger().error("Failed creating radar " + var4.getLocalizedMessage(), var4);
-            radarOptions.radarAllowed = false;
-            radarOptions.radarMobsAllowed = false;
-            radarOptions.radarPlayersAllowed = false;
-            this.radar = null;
-            this.radarSimple = null;
-        }
+        // force fair-play
+        radarOptions.radarAllowed = false;
+        radarOptions.radarMobsAllowed = false;
+        radarOptions.radarPlayersAllowed = false;
+        mapOptions.cavesAllowed = false;
+        mapOptions.showCaves = false;
+        mapOptions.deathWaypointAllowed = false;
+        mapOptions.deathpoints = 0;
 
         VoxelConstants.getEvents().initEvents(this);
         this.map = new Map();
